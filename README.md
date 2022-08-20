@@ -5,6 +5,7 @@ Draw with just pixels.
 More features to be Added:
 
 -Variety of colors
--Erase
--Clear the entire sketch
+
+-Clear the entire sketch at once
+
 -Rainbow mode
