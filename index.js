@@ -2,11 +2,11 @@ function createGrid(grid, rowSize, colSize) {
   for (let i = 0; i < rowSize; i++) {
     grid[i] = document.createElement("div");
     grid[i].setAttribute("id", "container");
-    let sqrDivs = [];
+    let pixels = [];
     for (let j = 0; j < colSize; j++) {
-      sqrDivs[j] = document.createElement("div");
-      sqrDivs[j].setAttribute("id", "sqrDiv");
-      grid[i].appendChild(sqrDivs[j]);
+      pixels[j] = document.createElement("div");
+      pixels[j].setAttribute("id", "pixel");
+      grid[i].appendChild(pixels[j]);
     }
   }
   return grid;
@@ -28,15 +28,25 @@ function appendArray(pDiv, cDiv) {
   let state;
   grid = createGrid(grid, GRID_WIDTH, GRID_HEIGHT);
   gridCont = appendArray(gridCont, grid);
-
-  buttonsEl.addEventListener("click", (e) => (state = e.target.id));
+  const pixels = document.querySelectorAll("#pixel");
+  buttonsEl.addEventListener("click", changeState);
 
   ["mouseover", "click"].forEach((type) =>
     gridCont.addEventListener(type, eventHandler, false)
   );
-
+  function changeState(event) {
+    state = event.target.id;
+    if (state === "reset") {
+      sketchReset();
+    }
+  }
+  function sketchReset() {
+    pixels.forEach((pxl) =>
+      pxl.setAttribute("style", "background-color:'transparent';")
+    );
+  }
   function eventHandler(event) {
-    if (event.target.id !== "sqrDiv") {
+    if (event.target.id !== "pixel") {
       return;
     }
     if (event.type === "click") {
