@@ -20,25 +20,38 @@ function appendArray(pDiv, cDiv) {
 (() => {
   const GRID_WIDTH = 16;
   const GRID_HEIGHT = 16;
+  const sketchEl = document.querySelector("#sketch");
+  const eraseEl = document.querySelector("#erase");
+  const buttonsEl = document.querySelector(".buttons");
   let gridCont = document.querySelector("#grid-container");
   let grid = [];
+  let state;
   grid = createGrid(grid, GRID_WIDTH, GRID_HEIGHT);
   gridCont = appendArray(gridCont, grid);
 
-  gridCont.addEventListener("mouseover", changeColor, false);
-  gridCont.addEventListener("click", changeColorClick);
-  function changeColor(event) {
+  buttonsEl.addEventListener("click", (e) => (state = e.target.id));
+
+  ["mouseover", "click"].forEach((type) =>
+    gridCont.addEventListener(type, eventHandler, false)
+  );
+
+  function eventHandler(event) {
     if (event.target.id !== "sqrDiv") {
+      return;
+    }
+    if (event.type === "click") {
+      changeColor(event);
       return;
     }
     if (event.buttons == 1) {
-      event.target.setAttribute("style", "background:black;");
+      changeColor(event);
     }
   }
-  function changeColorClick(event) {
-    if (event.target.id !== "sqrDiv") {
+  function changeColor(event) {
+    if (state === "eraser") {
+      event.target.setAttribute("style", "background-color:'transparent';");
       return;
     }
-    event.target.setAttribute("style", "background:black;");
+    event.target.setAttribute("style", "background-color:black;");
   }
 })();
