@@ -28,34 +28,40 @@ function appendArray(pDiv, cDiv) {
   let state;
   grid = createGrid(grid, GRID_WIDTH, GRID_HEIGHT);
   gridCont = appendArray(gridCont, grid);
-  const pixels = document.querySelectorAll("#pixel");
   buttonsEl.addEventListener("click", changeState);
 
-  ["mouseover", "click"].forEach((type) =>
-    gridCont.addEventListener(type, eventHandler, false)
-  );
+  gridCont.addEventListener("mouseover", eventHandler, false);
+
   function changeState(event) {
     state = event.target.id;
-    if (state === "reset") {
-      sketchReset();
+    switch (state) {
+      case "reset":
+        sketchReset();
+        break;
+      case "gridSize":
+        sizeReset();
     }
   }
   function sketchReset() {
+    const pixels = document.querySelectorAll("#pixel");
     pixels.forEach((pxl) =>
       pxl.setAttribute("style", "background-color:'transparent';")
     );
+  }
+  function sizeReset() {
+    let size = parseInt(prompt("Enter grid size (MAX=100) : "));
+    if (size <= 100) {
+      grid.length = 0;
+      grid = createGrid(grid, size, size);
+      gridCont.innerHTML = "";
+      gridCont = appendArray(gridCont, grid);
+    }
   }
   function eventHandler(event) {
     if (event.target.id !== "pixel") {
       return;
     }
-    if (event.type === "click") {
-      changeColor(event);
-      return;
-    }
-    if (event.buttons == 1) {
-      changeColor(event);
-    }
+    changeColor(event);
   }
   function changeColor(event) {
     if (state === "eraser") {
