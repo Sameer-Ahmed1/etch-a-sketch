@@ -17,6 +17,15 @@ function appendArray(pDiv, cDiv) {
   return pDiv;
 }
 
+function getRandomColor() {
+  let letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 (() => {
   const GRID_WIDTH = 16;
   const GRID_HEIGHT = 16;
@@ -66,6 +75,13 @@ function appendArray(pDiv, cDiv) {
   function changeColor(event) {
     if (state === "eraser") {
       event.target.setAttribute("style", "background-color:'transparent';");
+      return;
+    }
+    if (state === "randColor") {
+      event.target.setAttribute(
+        "style",
+        `background-color:${getRandomColor()};`
+      );
       return;
     }
     event.target.setAttribute("style", "background-color:black;");
