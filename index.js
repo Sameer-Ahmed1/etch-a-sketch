@@ -1,20 +1,16 @@
-function createGrid(grid, rowSize, colSize) {
+function createGrid(rowSize, colSize) {
+  let grid = [];
   for (let i = 0; i < rowSize; i++) {
     grid[i] = document.createElement("div");
     grid[i].setAttribute("id", "container");
     let pixels = [];
     for (let j = 0; j < colSize; j++) {
       pixels[j] = document.createElement("div");
-      pixels[j].setAttribute("id", "pixel");
+      pixels[j].setAttribute("class", "pixel");
       grid[i].appendChild(pixels[j]);
     }
   }
   return grid;
-}
-
-function appendArray(pDiv, cDiv) {
-  cDiv.forEach((div) => pDiv.appendChild(div));
-  return pDiv;
 }
 
 function getRandomColor() {
@@ -33,13 +29,12 @@ function getRandomColor() {
   const eraseEl = document.querySelector("#erase");
   const buttonsEl = document.querySelector(".buttons");
   let gridCont = document.querySelector("#grid-container");
-  let grid = [];
   let state;
-  grid = createGrid(grid, GRID_WIDTH, GRID_HEIGHT);
-  gridCont = appendArray(gridCont, grid);
+
+  gridCont.append(...createGrid(GRID_WIDTH, GRID_HEIGHT));
   buttonsEl.addEventListener("click", changeState);
 
-  gridCont.addEventListener("mouseover", eventHandler, false);
+  gridCont.addEventListener("mouseover", gridMouseover, false);
 
   function changeState(event) {
     state = event.target.id;
@@ -49,10 +44,11 @@ function getRandomColor() {
         break;
       case "gridSize":
         sizeReset();
+        break;
     }
   }
   function sketchReset() {
-    const pixels = document.querySelectorAll("#pixel");
+    const pixels = Array.from(document.getElementsByClassName("pixel"));
     pixels.forEach((pxl) =>
       pxl.setAttribute("style", "background-color:'transparent';")
     );
@@ -60,30 +56,40 @@ function getRandomColor() {
   function sizeReset() {
     let size = parseInt(prompt("Enter grid size (MAX=100) : "));
     if (size <= 100) {
-      grid.length = 0;
-      grid = createGrid(grid, size, size);
       gridCont.innerHTML = "";
-      gridCont = appendArray(gridCont, grid);
+      gridCont.append(...createGrid(size, size));
+    } else {
+      alert("Please enter size less than or equal to 100!");
     }
   }
-  function eventHandler(event) {
-    if (event.target.id !== "pixel") {
+  function gridMouseover(event) {
+    if (event.target.classList.value !== "pixel") {
       return;
     }
-    changeColor(event);
+    changeColor(event.target);
   }
-  function changeColor(event) {
-    if (state === "eraser") {
-      event.target.setAttribute("style", "background-color:'transparent';");
-      return;
+  function changeColor(pixel) {
+    switch (state) {
+      case "eraser":
+        pixel.setAttribute("style", "background-color:'transparent';");
+        break;
+      case "randColor":
+        pixel.setAttribute("style", `background-color:${getRandomColor()};`);
+        break;
+      case "incBlack":
+        changeOpacity(pixel);
+        break;
+      default:
+        pixel.style.backgroundColor = "RGBA(0, 0, 0,1)";
     }
-    if (state === "randColor") {
-      event.target.setAttribute(
-        "style",
-        `background-color:${getRandomColor()};`
-      );
-      return;
+  }
+  function changeOpacity(pixel) {
+    if (!pixel.style.backgroundColor) {
+      pixel.style.backgroundColor = "RGBA(0, 0, 0, 0.0)";
+    } else {
+      const opacity = parseFloat(pixel.style.backgroundColor.slice(14));
+      console.log(`RGBA(0, 0, 0, ${opacity + 0.1})`);
+      pixel.style.backgroundColor = `RGBA(0, 0, 0, ${opacity + 0.1})`;
     }
-    event.target.setAttribute("style", "background-color:black;");
   }
 })();
