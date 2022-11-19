@@ -1,11 +1,8 @@
 # Etch-a-sketch
 
-Draw with just pixels.
+Hover over the grid and Draw using just pixels.
 
-More features to be Added:
 
--Variety of colors
+Live demo: https://sameer-ahmed1.github.io/etch-a-sketch/ 
 
--Clear the entire sketch at once
 
--Rainbow mode
