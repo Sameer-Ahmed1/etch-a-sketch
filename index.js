@@ -22,7 +22,6 @@ function getRandomColor() {
   return color;
 }
 
-(() => {
   const GRID_WIDTH = 16;
   const GRID_HEIGHT = 16;
   const sketchEl = document.querySelector("#sketch");
@@ -92,4 +91,3 @@ function getRandomColor() {
       pixel.style.backgroundColor = `RGBA(0, 0, 0, ${opacity + 0.1})`;
     }
   }
-})();
